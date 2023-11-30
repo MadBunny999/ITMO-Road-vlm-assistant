@@ -1,0 +1,6 @@
+Pillow==9.5.0
+opencv-python==4.8.1.78
+pytube==15.0.0
+streamlit==1.28.2
+torch==2.1.1
+ultralytics==8.0.220
