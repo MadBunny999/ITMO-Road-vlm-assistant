@@ -29,25 +29,25 @@ def load_model(model_path):
     return model
 
 
-def get_vlm_result(image):
-    answer = ("Я памятник себе воздвиг нерукотворный,К нему не зарастет народная тропа, Вознесся выше он главою "
-              "непокорной Александрийского столпа. Нет, весь я не умру — душа в заветной лире Мой прах переживет и "
-              "тленья убежит — И славен буду я, доколь в подлунном мире Жив будет хоть один пиит.")
-
-    return answer
-
-
 # def get_vlm_result(image):
-#     json_data = {'text': settings.PROMPT}
-#     cv2.imwrite("image.jpg", image)
+#     answer = ("Я памятник себе воздвиг нерукотворный,К нему не зарастет народная тропа, Вознесся выше он главою "
+#               "непокорной Александрийского столпа. Нет, весь я не умру — душа в заветной лире Мой прах переживет и "
+#               "тленья убежит — И славен буду я, доколь в подлунном мире Жив будет хоть один пиит.")
 #
-#     with open("image.jpg", 'rb') as file:
-#         files = {'image': ("image.jpg", file, 'image/jpeg')}
-#         data = {'json_data': json.dumps(json_data)}
-#
-#         response = requests.post(settings.VLM_URL, files=files, data=data)
-#
-#     return response.text
+#     return answer
+
+
+def get_vlm_result(image):
+    json_data = {'text': settings.PROMPT}
+    cv2.imwrite("image.jpg", image)
+
+    with open("image.jpg", 'rb') as file:
+        files = {'image': ("image.jpg", file, 'image/jpeg')}
+        data = {'json_data': json.dumps(json_data)}
+
+        response = requests.post(settings.VLM_URL, files=files, data=data)
+
+    return json.loads(response.text)['Ответ']
 
 
 def wrap_text(text, max_width, font):

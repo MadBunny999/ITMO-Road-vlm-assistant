@@ -35,5 +35,5 @@ WEBCAM_PATH = 0
 
 YOLO_PATH = os.path.join(ROOT, "models/best.pt")
 
-VLM_URL = "http://127.0.0.1:8000"
+VLM_URL = "https://aicltr.itmo.ru/srv/"
 PROMPT = "Describe driver's actions according to road signs"
