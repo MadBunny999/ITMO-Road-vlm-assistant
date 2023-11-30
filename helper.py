@@ -29,14 +29,6 @@ def load_model(model_path):
     return model
 
 
-# def get_vlm_result(image):
-#     answer = ("Я памятник себе воздвиг нерукотворный,К нему не зарастет народная тропа, Вознесся выше он главою "
-#               "непокорной Александрийского столпа. Нет, весь я не умру — душа в заветной лире Мой прах переживет и "
-#               "тленья убежит — И славен буду я, доколь в подлунном мире Жив будет хоть один пиит.")
-#
-#     return answer
-
-
 def get_vlm_result(image):
     json_data = {'text': settings.PROMPT}
     cv2.imwrite("image.jpg", image)
@@ -85,7 +77,7 @@ def add_text_to_image(image, sentence):
 
     for line in wrapped_text:
         line_width, _ = font.getsize(line)
-        draw.text(((image.width - line_width) // 2, y), line, "white", font=font)
+        draw.text(((image.width - line_width) // 2, y), line, "black", font=font)
         y += int(font_size * line_spacing)
 
     # save image to disk
@@ -110,7 +102,10 @@ def _display_detected_frames(model, st_frame, st_for_text, image, print_text=Fal
     """
     # # Plot the detected objects on the video frame
     result = model.predict(image, imgsz=512, conf=0.55)[0]
-    res_plotted = result.plot()
+    bboxes = result.boxes
+    bboxes = [bbox.xyxy[0].numpy().astype(int) for bbox in bboxes]
+    print(bboxes)
+    res_plotted = plot_detect(image, bboxes)
 
     st_frame.image(res_plotted,
                    caption='Detected Video',
@@ -121,12 +116,13 @@ def _display_detected_frames(model, st_frame, st_for_text, image, print_text=Fal
 
     if print_text and len(result.boxes.cls) >= 2:
         result = get_vlm_result(image)
+        result = result.replace("\n", " ")
         current_ind = 0
         while current_ind < len(result):
             part_result = result[:current_ind]
             # st_for_text.text(part_result)
             text_image = add_text_to_image(res_plotted, part_result)
-            for _ in range(2):
+            for _ in range(1):
                 st_frame.image(text_image,
                                caption='Detected Video',
                                channels="BGR",
@@ -314,7 +310,7 @@ def generate_video(image_folder, output_path):
 
     frame = cv2.imread(os.path.join(image_folder, images[0]))
     height, width, layers = frame.shape
-    video = cv2.VideoWriter(output_path, 0, 23, (width, height))
+    video = cv2.VideoWriter(output_path, 0, 17, (width, height))
 
     for image in images:
         video.write(cv2.imread(os.path.join(image_folder, image)))
@@ -340,3 +336,15 @@ def delete_processed_images():
 
     for image in images:
         os.remove(os.path.join("processed_images", image))
+    if "result.avi" in os.listdir():
+        os.remove("result.avi")
+
+
+def plot_detect(image, boxes, box_color=(0, 255, 0)):
+    if not boxes:
+        return image
+
+    for bbox in boxes:
+        cv2.rectangle(image, (bbox[0], bbox[1]), (bbox[2], bbox[3]), box_color, 1)
+
+    return image

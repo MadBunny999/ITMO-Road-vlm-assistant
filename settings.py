@@ -36,4 +36,5 @@ WEBCAM_PATH = 0
 YOLO_PATH = os.path.join(ROOT, "models/best.pt")
 
 VLM_URL = "https://aicltr.itmo.ru/srv/"
-PROMPT = "Describe driver's actions according to road signs"
+PROMPT = ("You are a navigator in a car. Write a numerated instruction of drivers actions only according to road signs "
+          "on this photo from the video register. There must not be any additional information")
