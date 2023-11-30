@@ -22,3 +22,18 @@ images_dir = os.path.join(processed_data_dir, "images")
 raw_labels_path = os.path.join(processed_data_dir, "labels.csv")
 yolo_labels_dir = os.path.join(processed_data_dir, "labels")
 
+# Sources
+VIDEO = 'Video'
+WEBCAM = 'Webcam'
+RTSP = 'RTSP'
+YOUTUBE = 'YouTube'
+
+SOURCES_LIST = [VIDEO, WEBCAM, RTSP, YOUTUBE]
+
+# Webcam
+WEBCAM_PATH = 0
+
+YOLO_PATH = os.path.join(ROOT, "models/best.pt")
+
+VLM_URL = "http://127.0.0.1:8000"
+PROMPT = "Describe driver's actions according to road signs"
